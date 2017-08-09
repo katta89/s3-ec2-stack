@@ -1,0 +1,97 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "KeyName": {
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "String"
+        },
+        "SSHLocation": {
+            "Description": "The IP address range that can be used to SSH to the EC2 instances",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+        },
+        "InstanceType": {
+            "Description": "Quad EC2 instance type",
+            "Type": "String",
+            "Default": "t2.medium",
+            "AllowedValues": [
+                "t1.micro",
+                "t2.micro",
+                "t2.small",
+                "t2.medium",
+                "m1.small",
+                "m1.medium",
+                "m1.large",
+                "m1.xlarge",
+                "m2.xlarge"
+            ],
+            "ConstraintDescription": "must be a valid EC2 instance type."
+        }
+    },
+    "Mappings": {
+        "RegionMap": {
+            "us-east-1": {
+                "AMI": "ami-7f418316"
+            },
+            "us-west-1": {
+                "AMI": "ami-951945d0"
+            },
+            "us-west-2": {
+                "AMI": "ami-16fd7026"
+            },
+            "eu-west-1": {
+                "AMI": "ami-24506250"
+            },
+            "sa-east-1": {
+                "AMI": "ami-3e3be423"
+            },
+            "ap-southeast-1": {
+                "AMI": "ami-74dda626"
+            },
+            "ap-southeast-2": {
+                "AMI": "ami-b3990e89"
+            },
+            "ap-northeast-1": {
+                "AMI": "ami-dcfa4edd"
+            }
+        }
+    },
+    "Resources": {
+        "QuadBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "BucketName": "quad-cloud-test-08-09"
+            }
+        },
+        "quadEc2Instance1": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "RegionMap",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "AMI"
+                    ]
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "InstanceId": {
+            "Description": "InstanceId of the newly created EC2 instance",
+            "Value": {
+                "Ref": "quadEc2Instance1"
+            }
+        }
+
+    }
+}
