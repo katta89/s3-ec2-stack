@@ -14,7 +14,7 @@
             "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
         },
         "InstanceType": {
-            "Description": "Quad EC2 instance type",
+            "Description": "QuadEC2 instance type",
             "Type": "String",
             "Default": "t2.medium",
             "AllowedValues": [
@@ -60,14 +60,14 @@
         }
     },
     "Resources": {
-        "QuadBucket": {
+        "quads3": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "PublicRead",
-                "BucketName": "quad-cloud-test-08-09"
+                "BucketName": "quads3"
             }
         },
-        "quadEc2Instance1": {
+        "quadEc2": {
             "Type": "AWS::EC2::Instance",
             "Properties": {
                 "KeyName": {
@@ -89,7 +89,7 @@
         "InstanceId": {
             "Description": "InstanceId of the newly created EC2 instance",
             "Value": {
-                "Ref": "quadEc2Instance1"
+                "Ref": "quadEc2"
             }
         }
 
